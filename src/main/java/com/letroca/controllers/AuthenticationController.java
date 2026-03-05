@@ -13,9 +13,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @RestController
 @RequestMapping(value = "/auth", produces = {"application/json"})
@@ -60,5 +62,16 @@ public class AuthenticationController {
         this.userRepository.save(user);
 
         return ResponseEntity.ok().build();
+    }
+
+    /**
+    * Example of what an endpoint can looks like after login
+    *
+    * @param Authorization header containing jwt token
+    * @return ResponseEntity of the logged in user
+    */
+    @GetMapping(value= "/example", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> validate(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(user.getName());
     }
 }
